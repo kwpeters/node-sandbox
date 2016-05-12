@@ -10,16 +10,15 @@ export function retry<ResolveType>(theFunc:() => Promise<ResolveType>, numAttemp
             theFunc().then(
                 (value: ResolveType) => {
                     // The current iteration resolved.  Return the value to the client immediately.
-                    console.log("resolved.");
                     resolve(value);
                 },
                 (err: any): void => {
                     // The promise was rejected.
-                    console.log("rejected.");
-                    if (numAttempts - 1 === 0) {
+                    --numAttempts;
+                    if (numAttempts === 0) {
                         reject(err);
                     } else {
-                        resolve(retry(theFunc, numAttempts - 1));
+                        resolve(retry(theFunc, numAttempts));
                     }
                 }
             );
