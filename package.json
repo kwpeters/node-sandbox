@@ -18,5 +18,8 @@
   "bugs": {
     "url": "https://github.com/kwpeters/node-sandbox/issues"
   },
-  "homepage": "https://github.com/kwpeters/node-sandbox#readme"
+  "homepage": "https://github.com/kwpeters/node-sandbox#readme",
+  "dependencies": {
+    "lodash": "^4.12.0"
+  }
 }
