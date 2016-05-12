@@ -20,6 +20,16 @@
   },
   "homepage": "https://github.com/kwpeters/node-sandbox#readme",
   "dependencies": {
-    "lodash": "^4.12.0"
+    "bluebird": "^3.3.5",
+    "lodash": "^4.12.0",
+    "tape": "^4.5.1"
+  },
+  "devDependencies": {
+    "del": "^2.2.0",
+    "faucet": "0.0.1",
+    "gulp": "^3.9.1",
+    "gulp-helpers": "kwpeters/gulp-helpers#2d3712a",
+    "gulp-tape": "0.0.8",
+    "tape": "^4.5.1"
   }
 }
