@@ -1,0 +1,22 @@
+{
+  "name": "node-sandbox",
+  "version": "1.0.0",
+  "description": "My experimentations with Node.js.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/kwpeters/node-sandbox.git"
+  },
+  "keywords": [
+    "nodejs"
+  ],
+  "author": "Kevin Peters <kwpeters@gmail.com>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/kwpeters/node-sandbox/issues"
+  },
+  "homepage": "https://github.com/kwpeters/node-sandbox#readme"
+}
