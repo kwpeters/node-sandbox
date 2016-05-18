@@ -3,8 +3,27 @@
 import * as Promise from "bluebird";
 import * as _ from "lodash";
 
+
+/**
+ * The value that will be multiplied by successively higher powers of 2 when
+ * calculating delay time during exponential backoff.
+ * @type {number}
+ */
 const BACKOFF_MULTIPLIER: number = 20;
 
+
+/**
+ * Gets a Promise that will resolve with resolveValue after the specified number
+ * of milliseconds.
+ *
+ * @param {number} ms - The number of milliseconds to dealy before the Promise
+ * will be resolved.
+ *
+ * @param {any} resolveValue - The value the Promise will be resolved with.
+ *
+ * @returns {Promise} A Promise that will be resolved with the specified value
+ * after the specified delay
+ */
 export function getTimerPromise<ResolveType>(
     ms:             number,
     resolveValue:  ResolveType
@@ -22,12 +41,56 @@ export function getTimerPromise<ResolveType>(
 }
 
 
-export function retry<ResolveType>(theFunc:() => Promise<ResolveType>, maxNumAttempts:number):Promise<ResolveType> {
+/**
+ * Adapts a promise-returning function into a promise-returning function that
+ * will retry the operation up to maxNumAttempts times before rejecting.
+ * Retries are performed using exponential backoff.
+ *
+ * @param theFunc - The promise-returning function that will be retried multiple
+ * times
+ *
+ * @param maxNumAttempts - The maximum number of times to invoke theFunc before
+ * rejecting the returned Promise.  This argument should always be greater than
+ * or equal to 1.  If it is not, theFunc will be tried only once.
+ *
+ * @returns {Promise} A Promise that will be resolved immediately (with the same
+ * value) when the promise returned by the Func resolves.  If the Promise
+ * returned by theFunc rejects, it will be retried up to maxNumAttempts
+ * invocations.  If the Promise returned by the last invocation of theFunc
+ * rejects, the returned Promise will be rejected with the same value.
+ */
+export function retry<ResolveType>(
+    theFunc:         () => Promise<ResolveType>,
+    maxNumAttempts:  number
+):Promise<ResolveType> {
     "use strict";
     return retryWhileImpl(theFunc, () => true, maxNumAttempts, 0);
 }
 
 
+/**
+ * Adapts a promise-returning function into a promise-returning function that
+ * will continue to retry the operation as long as whilePredicate returns true
+ * up to maxNumAttempts attempts before rejecting.  Retries are performed using
+ * exponential backoff.
+ *
+ * @param theFunc - The promise-returning function that will be retried multiple
+ * times
+ *
+ * @param whilePredicate - A function that determines whether the operation
+ * should continue being retried.  This function takes the value returned by the
+ * last rejection and returns true if retrying should continue or false otherwise.
+ *
+ * @param maxNumAttempts - The maximum number of times to invoke theFunc before
+ * rejecting the returned Promise.  This argument should always be greater than
+ * or equal to 1.  If it is not, theFunc will be tried only once.
+ *
+ * @returns {Promise} A Promise that will be resolved immediately (with the same
+ * value) when the promise returned by the Func resolves.  If the Promise
+ * returned by theFunc rejects, it will be retried up to maxNumAttempts
+ * invocations.  If the Promise returned by the last invocation of theFunc
+ * rejects, the returned Promise will be rejected with the same value.
+ */
 export function retryWhile<ResolveType>(
     theFunc:() => Promise<ResolveType>,
     whilePredicate: (err: any) => boolean,
@@ -38,6 +101,15 @@ export function retryWhile<ResolveType>(
 }
 
 
+/**
+ * Recursive implementation of retryWhile(), allowing for additional
+ * implementation specific arguments.
+ * @param theFunc - The operation to perform
+ * @param whilePredicate - Predicate that determines whether to retry
+ * @param maxNumAttempts - Maximum number of invocations of theFunc
+ * @param attemptsSoFar - Number of theFunc invocations so far
+ * @returns {Promise} The Promise returned to the client
+ */
 function retryWhileImpl<ResolveType>(
     theFunc:         () => Promise<ResolveType>,
     whilePredicate:  (err: any) => boolean,
@@ -73,14 +145,14 @@ function retryWhileImpl<ResolveType>(
                             const randomMs: number = _.random(-1 * randomHalfRange, randomHalfRange);
                             const delayMs: number = backoffBaseMs + randomMs;
 
-                            console.log("Failed. Queuing next attempt in " + backoffBaseMs + " + " + randomMs + " (" + delayMs + ") ms");
+                            //console.log("Failed. Queuing next attempt in " + backoffBaseMs + " + " + randomMs + " (" + delayMs + ") ms");
                             const timerPromise: Promise<void> = getTimerPromise(delayMs, undefined);
                             resolve(
                                 timerPromise
                                     .then(() => {
                                         return retryWhileImpl(theFunc, whilePredicate, maxNumAttempts, attemptsSoFar);
                                     })
-                                );
+                            );
                         }
                     }
             );
