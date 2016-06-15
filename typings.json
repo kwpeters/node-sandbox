@@ -5,7 +5,7 @@
     "tape": "registry:npm/tape#4.0.0+20160322235547"
   },
   "devDependencies": {},
-  "ambientDependencies": {
+  "globalDependencies": {
     "node": "registry:dt/node#4.0.0+20160509154515"
   }
 }
