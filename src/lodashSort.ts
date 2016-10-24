@@ -1,6 +1,3 @@
-///<reference path="../typings/index.d.ts"/>
-
-
 import {sortBy} from "lodash";
 
 const arrData: number[] = [

@@ -22,20 +22,10 @@ gulp.task("clean", function () {
 
 
 ////////////////////////////////////////////////////////////////////////////////
-// setup
-////////////////////////////////////////////////////////////////////////////////
-gulp.task("setup", ["clean"], function () {
-    "use strict";
-
-    return gh.exec("typings install");
-});
-
-
-////////////////////////////////////////////////////////////////////////////////
 // build
 ////////////////////////////////////////////////////////////////////////////////
 
-gulp.task("build", ["setup"], function () {
+gulp.task("build", ["clean"], function () {
     "use strict";
     return buildJs();
 });
@@ -58,13 +48,9 @@ function getSrcGlobs(includeUnitTestFiles) {
 function getTsConfig(emitDeclarationFiles) {
     "use strict";
 
-    return {
-        target:            "ES5",
-        declarationFiles:  !!emitDeclarationFiles,
-        noExternalResolve: false,
-        noEmitOnError:     true,
-        module:            "commonjs"
-    };
+    const compilerOptions = require("./tsconfig.json").compilerOptions;
+    compilerOptions.declaration = !!emitDeclarationFiles;
+    return compilerOptions;
 }
 
 function buildJs() {
@@ -77,7 +63,7 @@ function buildJs() {
 
     tsResults = gulp.src(getSrcGlobs(false))
         .pipe(sourcemaps.init())
-        .pipe(ts(getTsConfig(true), undefined, ts.reporter.longReporter()));
+        .pipe(ts(getTsConfig(true), ts.reporter.longReporter()));
 
     var jsStream = tsResults.js
         .pipe(sourcemaps.write())

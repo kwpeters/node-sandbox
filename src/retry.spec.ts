@@ -1,5 +1,3 @@
-///<reference path="../typings/main.d.ts"/>
-
 import * as test from "tape";
 import {retry, getTimerPromise, retryWhile} from "./retry";
 import * as Promise from "bluebird";

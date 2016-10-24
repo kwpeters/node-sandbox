@@ -1,5 +1,3 @@
-///<reference path="../typings/index.d.ts"/>
-
 /*
  * This script demonstrates how you can throw a function's execution into a
  * future node event loop.
@@ -15,7 +13,7 @@
 
         --iterations;
         if (iterations > 0) {
-            setTimeout(worker);
+            setTimeout(worker, 0);
         }
     };
 

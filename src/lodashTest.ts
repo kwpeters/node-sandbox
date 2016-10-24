@@ -1,5 +1,3 @@
-///<reference path="../typings/index.d.ts"/>
-
 import {trim, trimStart, trimEnd, pad, padStart, padEnd} from "lodash";
 
 const trimStr: string = "     trim        ";

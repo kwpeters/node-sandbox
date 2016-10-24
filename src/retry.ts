@@ -1,5 +1,3 @@
-///<reference path="../typings/index.d.ts"/>
-
 import * as Promise from "bluebird";
 import * as _ from "lodash";
 
